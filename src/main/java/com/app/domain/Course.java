@@ -25,8 +25,8 @@ public class Course implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @JoinColumn(name = "currency_id")
-    @OneToOne(fetch = FetchType.EAGER)
+    @MapsId
+    @OneToOne(fetch = FetchType.LAZY)
     private Currency currency;
 
     @DateTimeFormat(pattern = "dd/MM/yyyy")

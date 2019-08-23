@@ -1,10 +1,9 @@
 package com.app.service.impl;
 
-import com.app.domain.Currency;
 import com.app.domain.Course;
+import com.app.exception.CourseNotFound;
 import com.app.repos.CourseRepos;
-import com.app.repos.CurrencyRepos;
-import com.app.service.CurrencyCurseService;
+import com.app.service.CurseService;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -19,28 +18,20 @@ import java.util.Objects;
 @Log4j2
 @Service
 @RequiredArgsConstructor
-public class CurrencyCurseServiceImpl implements CurrencyCurseService {
+public class CurseServiceImpl implements CurseService {
 
-    @NonNull
-    private final CurrencyRepos currencyRepos;
     @NonNull
     private final CourseRepos courseRepos;
 
     @Override
-    public boolean isExist(Currency currency) {
-        return false;
-    }
-
-    @Override
     public Course findByDateAndId(Date date, Long id) {
-
         var val = courseRepos.findByDateAndId(date, id);
-
         if (Objects.isNull(val)) {
-
+            log.warn("Course not found by: \nDate:" + date.toString() + "\n ID: " + id.toString());
+            throw new CourseNotFound();
         }
-
-        return null;
+        log.info("Find course: " + val.toString());
+        return val;
     }
 
     @Override

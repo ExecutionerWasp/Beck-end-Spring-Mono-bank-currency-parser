@@ -6,8 +6,8 @@ import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 import java.io.Serializable;
+import java.util.Set;
 
 /**
  * @author Alvin
@@ -17,7 +17,7 @@ import java.io.Serializable;
 @Data
 @Builder
 @EqualsAndHashCode(of = {"id", "mnemonics"})
-@ToString(of = {"id", "description"})
+@ToString(of = {"mnemonics", "description"})
 public class Currency implements Serializable {
 
     @Id
@@ -27,7 +27,8 @@ public class Currency implements Serializable {
     @Column(name = "description")
     private String description;
 
-    @Column(name = "mnemonics")
-    @NotNull
-    private String mnemonics;
+    @ElementCollection(targetClass = Mnemonics.class, fetch = FetchType.EAGER)
+    @CollectionTable(name = "mnemonics_type", joinColumns = @JoinColumn(name = "currency_id"))
+    @Enumerated(EnumType.STRING)
+    private Set<Mnemonics> mnemonics;
 }
