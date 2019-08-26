@@ -38,6 +38,7 @@ public class CurrencyServiceImpl implements CurrencyService {
             log.info("Saving currencyA...");
             return this.save(currency);
         } else {
+            // If currency is not exist -> save it
             if (!this.isExist(currency.getId())) {
                 log.info("Currency is exist");
                 log.info("Replacing currencyA...");

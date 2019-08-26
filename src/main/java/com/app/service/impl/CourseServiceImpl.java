@@ -66,12 +66,16 @@ public class CourseServiceImpl implements CourseService {
         return courseRepos.save(course);
     }
 
+    /**
+     * Parsing of json objects
+     * */
     @Override
     @Cacheable("courses")
     public List<Course> findAllByHttpRequest(RequestType type) {
         JsonParser springParser = JsonParserFactory.getJsonParser();
         List<Object> list = springParser.parseList(type.getJson());
 
+        //It will be used for saving parsed courses from request
         List<Course> courses = new ArrayList<>();
 
         for (Object o : list) {
@@ -79,6 +83,9 @@ public class CourseServiceImpl implements CourseService {
             if (o instanceof Map) {
                 Map<String, Object> map = (Map<String, Object>) o;
                 for (Map.Entry<String, Object> entry : map.entrySet()) {
+
+                    //Check on existing current currency code in database
+                    //If not exist -> break parsing and check next object
                     if (entry.getKey().equals("currencyCodeA")){
                         try {
                             course = new Course();
@@ -89,6 +96,9 @@ public class CourseServiceImpl implements CourseService {
                             break;
                         }
                     }
+
+                    //Check on existing current currency code in database
+                    //If not exist -> break parsing and check next object
                     if (entry.getKey().equals("currencyCodeB")){
                         try {
                             course.setCurrencyB(currencyService.findById(entry.getValue().toString()));
@@ -98,6 +108,8 @@ public class CourseServiceImpl implements CourseService {
                             break;
                         }
                     }
+
+                    //Save in object parsed metadata
                     switch (entry.getKey()) {
                         case "date":
                             course.setDate(new Date(Long.valueOf(entry.getValue().toString()) * 1000));
@@ -112,6 +124,7 @@ public class CourseServiceImpl implements CourseService {
                 }
 
             }
+            //If created object is non null -> save it on list
             if (Objects.nonNull(course)){
                 courses.add(course);
             }
@@ -120,6 +133,8 @@ public class CourseServiceImpl implements CourseService {
         log.info("Currency list size : " + courses.size());
         log.info("Currency data of mono bank has been get successfully");
 
+        //Filtering
+        //Needed only cost currency data by UAH
         List<Course> filtered = courses.stream()
                 .filter(course ->
                         course.getCurrencyB().equals(

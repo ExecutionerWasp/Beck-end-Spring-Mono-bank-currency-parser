@@ -10,11 +10,13 @@ import java.io.Serializable;
 
 /**
  * @author Alvin
+ * Enum for comfortable request manipulation and take json string from it
  **/
 @Log4j2
 @Getter
 @RequiredArgsConstructor
 public enum RequestType implements Serializable {
+
     MONO_BANK("https://api.monobank.ua/bank/currency");
 
     @NonNull

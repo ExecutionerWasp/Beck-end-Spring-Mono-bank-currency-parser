@@ -23,6 +23,9 @@ import java.io.Serializable;
 @AllArgsConstructor
 public class Currency implements Serializable {
 
+    /**
+     * It takes from json currency code
+     * */
     @Id
     @Column(name = "id")
     @NotNull

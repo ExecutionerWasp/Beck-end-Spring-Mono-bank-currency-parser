@@ -27,11 +27,17 @@ public class Course implements Serializable {
     @JsonIgnore
     private Long id;
 
+    /**
+     * Celling currency
+     * */
     @JoinColumn(name = "currencyCodeA")
     @OneToOne(fetch = FetchType.EAGER)
     @JsonProperty(value = "cellingCurrency")
     private Currency currencyA;
 
+    /**
+     * Cost currency
+     * */
     @JoinColumn(name = "currencyCodeB")
     @OneToOne(fetch = FetchType.EAGER)
     @JsonProperty(value = "costCurrency")
