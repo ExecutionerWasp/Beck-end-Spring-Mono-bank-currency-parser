@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.boot.json.JsonParser;
 import org.springframework.boot.json.JsonParserFactory;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import javax.validation.constraints.NotNull;
@@ -34,17 +35,20 @@ public class CourseServiceImpl implements CourseService {
     private final CurrencyService currencyService;
 
     @Override
+    @Cacheable("courses")
     public Course findByMnemonics(@NotNull String m) {
         return this.findByCurrencyA(currencyService.findByMnemonics(m));
     }
 
     @Override
+    @Cacheable("courses")
     public Course findByCurrencyA(@NotNull Currency currencyA) {
         log.info("Searching by : " + currencyA);
         return courseRepos.findByCurrencyA(currencyA);
     }
 
     @Override
+    @Cacheable("courses")
     public Course findByCurrencyCodeAndDate(@NonNull Long code, @NonNull Date date) {
         log.info("Finding dy currency code and date");
         Currency currency = null;
@@ -63,6 +67,7 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
+    @Cacheable("courses")
     public List<Course> findAllByHttpRequest(RequestType type) {
         JsonParser springParser = JsonParserFactory.getJsonParser();
         List<Object> list = springParser.parseList(type.getJson());
@@ -127,6 +132,7 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
+    @Cacheable("courses")
     public List<Course> findAll() {
         log.info("Courses has been saved");
         return courseRepos.findAll();

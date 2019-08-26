@@ -9,6 +9,7 @@ import com.app.service.CurrencyService;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -48,6 +49,7 @@ public class CurrencyServiceImpl implements CurrencyService {
     }
 
     @Override
+    @Cacheable("currencies")
     public Currency findById(@NonNull Long id) throws CurrencyNotFoundException {
         var currency = currencyRepos.findById(id).orElseThrow(CurrencyNotFoundException::new);
         log.info("Find currencyA by id : " + id);
@@ -55,6 +57,7 @@ public class CurrencyServiceImpl implements CurrencyService {
     }
 
     @Override
+    @Cacheable("currencies")
     public Currency findByMnemonics(@NonNull String mnemonics) {
         log.info("Searching by mnemonics : " + mnemonics);
         var val = currencyRepos.findByMnemonics(mnemonics);
@@ -65,6 +68,7 @@ public class CurrencyServiceImpl implements CurrencyService {
     }
 
     @Override
+    @Cacheable("currencies")
     public List<Currency> findAll() {
         return currencyRepos.findAll();
     }

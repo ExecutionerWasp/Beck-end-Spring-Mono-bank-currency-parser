@@ -9,6 +9,5 @@ import org.springframework.stereotype.Repository;
  **/
 @Repository
 public interface CurrencyRepos extends JpaRepository<Currency, Long> {
-
     Currency findByMnemonics(String m);
 }
