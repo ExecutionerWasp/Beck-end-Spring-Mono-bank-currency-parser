@@ -1,13 +1,12 @@
 package com.app.domain;
 
-import lombok.Builder;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.*;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
-import java.util.Set;
 
 /**
  * @author Alvin
@@ -17,18 +16,21 @@ import java.util.Set;
 @Data
 @Builder
 @EqualsAndHashCode(of = {"id", "mnemonics"})
-@ToString(of = {"mnemonics", "description"})
+@ToString(of = {"id","mnemonics"})
+@NoArgsConstructor
+@AllArgsConstructor
 public class Currency implements Serializable {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "id")
+    @NotNull
+    @JsonIgnore
     private Long id;
 
-    @Column(name = "description")
-    private String description;
+    @Column(name = "mnemonics")
+    private String mnemonics;
 
-    @ElementCollection(targetClass = Mnemonics.class, fetch = FetchType.EAGER)
-    @CollectionTable(name = "mnemonics_type", joinColumns = @JoinColumn(name = "currency_id"))
-    @Enumerated(EnumType.STRING)
-    private Set<Mnemonics> mnemonics;
+    @Column(name = "description")
+    @JsonIgnore
+    private String description;
 }

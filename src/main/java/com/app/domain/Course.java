@@ -1,9 +1,8 @@
 package com.app.domain;
 
-import lombok.Builder;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
@@ -17,17 +16,26 @@ import java.util.Date;
 @Table(name = "course_journal")
 @Data
 @Builder
-@EqualsAndHashCode(of = {"id", "currency", "date"})
-@ToString(of = {"currency", "date", "buy", "cell"})
+@EqualsAndHashCode(of = {"currencyA", "currencyB", "date"})
+@ToString(of = {"currencyA", "date", "buy", "cell"})
+@NoArgsConstructor
+@AllArgsConstructor
 public class Course implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @JsonIgnore
     private Long id;
 
-    @MapsId
-    @OneToOne(fetch = FetchType.LAZY)
-    private Currency currency;
+    @JoinColumn(name = "currencyCodeA")
+    @OneToOne(fetch = FetchType.EAGER)
+    @JsonProperty(value = "cellingCurrency")
+    private Currency currencyA;
+
+    @JoinColumn(name = "currencyCodeB")
+    @OneToOne(fetch = FetchType.EAGER)
+    @JsonProperty(value = "costCurrency")
+    private Currency currencyB;
 
     @DateTimeFormat(pattern = "dd/MM/yyyy")
     @Temporal(TemporalType.DATE)
